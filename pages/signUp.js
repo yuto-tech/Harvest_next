@@ -50,16 +50,16 @@ export default function SignUp() {
   const router = useRouter();
   const classes = useStyles();
   const Users = firestore.collection('UserList');
-  const [FirstName, setFirstName] = useState('');
+  const [Name, setName] = useState('');
   const [LastName, setLastName] = useState('');
   const { register, handleSubmit, watch, errors } = useForm();
+
   const onSubmit = (data) => {
   firebase.auth().createUserWithEmailAndPassword(data.email,data.password)
     .then(() => {
       const {uid} = auth.currentUser;
         Users.doc(uid).set({
-        firstName:FirstName,
-        lastName:LastName,
+        Name:Name,
         createdAt:firebase.firestore.FieldValue.serverTimestamp(),
         uid
       })
@@ -72,6 +72,26 @@ export default function SignUp() {
       const errorMessage = error.message;
       console.log('fail...',errorCode,errorMessage);
     });
+  }
+
+  const SignGoogle = () =>{
+    const signInWithGoogle = () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const Users = firestore.collection('UserList');
+      const {uid,displayName,photoURL} = auth.currentUser;
+      auth.signInWithPopup(provider);
+      Users.doc(uid).set({
+      Name:displayName,
+      photoURL,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      uid
+    }).then(()=>{
+      router.replace('/');
+    })
+    }
+    return(
+      <button onClick={signInWithGoogle} >sign in with Google</button>
+    )
   }
 
   return (
@@ -89,33 +109,19 @@ export default function SignUp() {
         onSubmit={handleSubmit(onSubmit)}
         >
           <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="Name"
                 variant="outlined"
-                id="firstName"
-                label="First Name"
-                value={FirstName}
-                onChange={(e )=> setFirstName(e.target.value)}
+                id="Name"
+                label="Name"
+                value={Name}
+                onChange={(e )=> setName(e.target.value)}
                 inputRef={register({ required: true })}
                 required
                 fullWidth
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                value={LastName}
-                onChange={(e )=> setLastName(e.target.value)}
-                inputRef={register({ required: true })}
-                required
-                fullWidth
               />
             </Grid>
             <Grid item xs={12}>
@@ -150,6 +156,9 @@ export default function SignUp() {
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
+            </Grid>
+            <Grid item xs={12}>
+              <SignGoogle/>
             </Grid>
           </Grid>
           <Button

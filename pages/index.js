@@ -22,15 +22,14 @@ const firestore =  firebase.firestore();
 const storage = firebase.storage();
 
 const Index = () => {
-  const [Fanding, setFanding] = useState([]);
+  const [Fanded, setFanding] = useState([]);
   useEffect(() => {
     const fetchFands = async () => {
-      const usersCollection = await firestore.getcollection('UserList').doc('Cgm4cDLJRgUFMMUN5ejPqF51uy93').collection('Fanding').get();
+      const usersCollection = await firestore.collectionGroup('Fanding').get();
       setFanding(
         usersCollection.docs.map((doc) => {
-          console.log(doc.data());
-          return doc.data();
-        })
+            return doc.data();
+      })
       );
     };
     fetchFands();
@@ -59,26 +58,26 @@ const Index = () => {
     <Main>
       <SingleLineGridList/>
       <Boxes>
-        {Fanding.map((Fand) => {
+        {Fanded.map((fand) => {
           return(
-                  <Link href={`./pages/${Fand.uid}`}>
-                  <Box>
-                    <Box__thumbnail src={Fand.image}/>
-                    <Box__separate>
-                      <Box__separate__left>
-                        <Box__separate__left__icon src="./static/pics2.jpg"/>
-                      </Box__separate__left>
-                      <Box__separate__right>
-                        <Box__separate__right__title>{Fand.title}</Box__separate__right__title>
-                        <Box__separate__right__username>{Fand.FirstName}</Box__separate__right__username>
-                        支援 1000 回/公開日 {format(Fand.createdAt.seconds, 'LLLLdo',{locale:ja})}
-                      </Box__separate__right>
-                    </Box__separate>
-                  </Box>
-                  </Link>
-                  );
-                })
-                }
+              <Link href={`./pages/${fand.uid}`}>
+              <Box>
+                <Box__thumbnail src={fand.image}/>
+                <Box__separate>
+                  <Box__separate__left>
+                    <Box__separate__left__icon src="./static/pics2.jpg"/>
+                  </Box__separate__left>
+                  <Box__separate__right>
+                    <Box__separate__right__title>{fand.title}</Box__separate__right__title>
+                    <Box__separate__right__username>{fand.createdBy}
+                    </Box__separate__right__username>
+                    支援 1000 回/公開日 {format(fand.createdAt.seconds　* 1000, 'LLLLdo',{locale:ja})}
+                  </Box__separate__right>
+                </Box__separate>
+              </Box>
+              </Link>
+          );
+          })}
       </Boxes>
     </Main>
   </Container>

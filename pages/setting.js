@@ -28,17 +28,24 @@ const setting = () => {
   const [sumview, setsumview] = useState('');
   const [giveday, setgiveday] = useState('');
   const [explanation, setexplanation] = useState('');
+  const [Userlist, setUserlist] = useState('');
   const {uid} = auth.currentUser;
-  const fanding = firestore.collection('UserList').doc(uid).collection('Fanding');
+  const fanding = firestore.collection('Fanding').doc(fileId);
+  firestore.collection('UserList').doc(uid).get().then((doc) => {
+    setUserlist(doc.data());
+    }).catch((error) => {
+      console.log("Error getting document:", error);
+  })
   const onSubmit = () => {
-    fanding.add({
-      title:title,
-      image:fileUrl,
-      sumview:sumview,
-      giveday:giveday,
-      explanation:explanation,
-      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-      uid
+      fanding.set({
+        title:title,
+        image:fileUrl,
+        sumview:sumview,
+        giveday:giveday,
+        explanation:explanation,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy:Userlist.Name,
+        titleID:fileId
     }).then(()=>{
       router.replace('/');
     })

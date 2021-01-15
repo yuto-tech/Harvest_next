@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/router';
+import  SignGoogle  from '../Components/Authentication';
 import firebaseClient from '../firebaseClient';
 import firebase from "firebase/app"
 import "firebase/firestore";
@@ -99,6 +100,7 @@ export default function SignIn() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+              <SignGoogle/>
           <Button
             type="submit"
             fullWidth
