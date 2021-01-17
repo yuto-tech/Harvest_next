@@ -60,7 +60,7 @@ const Index = () => {
       <Boxes>
         {Fanded.map((fand) => {
           return(
-              <Link href={`./pages/${fand.uid}`}>
+              <Link href="/pages/[id]" as={`./pages/${fand.titleID}`}>
               <Box>
                 <Box__thumbnail src={fand.image}/>
                 <Box__separate>

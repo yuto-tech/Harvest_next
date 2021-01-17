@@ -15,7 +15,7 @@ const storage = firebase.storage();
 
 export default function SignGoogle () {
   const signInWithGoogle = () => {
-    const router = useRouter();
+    
     const provider = new firebase.auth.GoogleAuthProvider();
     const Users = firestore.collection('UserList');
     const {uid,displayName,photoURL} = auth.currentUser;
@@ -26,6 +26,7 @@ export default function SignGoogle () {
     createdAt:firebase.firestore.FieldValue.serverTimestamp(),
     uid
   }).then(()=>{
+    //ここがうまくいっていない
     router.replace('/');
   })
   }
