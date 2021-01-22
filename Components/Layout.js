@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import Head from 'next/head';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import SignIn from '../pages/signIn';
-import style from '../static/Style';
-import firebase from '../firebaseClient';
-
-/*
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    return children;
-  } else {
-    <SignIn/>
-  }})
-  */
+import firebaseClient from '../firebaseClient';
+import { useRouter } from 'next/router';
+import firebase from "firebase/app"
+import "firebase/firestore";
+import "firebase/auth";
+import 'firebase/storage';
+import 'firebase/app';
 
 
 const Layout = () => {
@@ -25,6 +19,6 @@ const Layout = () => {
           content='initial-scale=1.0, width=device-width' />
       </Head>
     </>);
-
 }
+
 export default Layout;

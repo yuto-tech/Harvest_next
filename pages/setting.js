@@ -13,12 +13,19 @@ import "firebase/firestore";
 import "firebase/auth";
 import 'firebase/storage';
 import 'firebase/app';
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon
+} from 'react-share';
 
 //firebase初期化
 firebaseClient();
 //firestore初期化
 const auth = firebase.auth();
 const firestore =  firebase.firestore();
+
 
 const setting = () => {
   const router = useRouter();
@@ -29,13 +36,17 @@ const setting = () => {
   const [giveday, setgiveday] = useState('');
   const [explanation, setexplanation] = useState('');
   const [Userlist, setUserlist] = useState('');
+  const [UUID, setUUID] = useState(uuidv4());
+  useEffect(() => {
+    !auth.currentUser && router.push('/signIn')
+  }, [auth.currentUser]);
   const {uid} = auth.currentUser;
-  const fanding = firestore.collection('Fanding').doc(fileId);
   firestore.collection('UserList').doc(uid).get().then((doc) => {
     setUserlist(doc.data());
     }).catch((error) => {
       console.log("Error getting document:", error);
   })
+  const fanding = firestore.collection('Fanding').doc(UUID);
   const onSubmit = () => {
       fanding.set({
         title:title,
@@ -45,7 +56,7 @@ const setting = () => {
         explanation:explanation,
         createdAt:firebase.firestore.FieldValue.serverTimestamp(),
         createdBy:Userlist.Name,
-        titleID:fileId
+        titleID:UUID
     }).then(()=>{
       router.replace('/');
     })
@@ -149,8 +160,8 @@ const setting = () => {
             />days
           </h4>
           <h4>
-            <Fand__goal__shere__icon src="../static/pics2.jpg" title="投稿後にシェアできます"/>
-            <Fand__goal__shere__icon src="../static/pics2.jpg" title="投稿後にシェアできます"/>
+            <FacebookIcon size={45} round />
+             <TwitterIcon size={45} round />
           </h4>
         </Fand__goal>
       </Fand>
@@ -162,7 +173,7 @@ const setting = () => {
           <Message__text__lay
           name="explanation"  
           cols="80" 
-          rows="15" 
+          rows="20" 
           nputRef={register({ required: true })}
           onChange={(e )=> setexplanation(e.target.value)}
           required 
@@ -179,7 +190,8 @@ const setting = () => {
       <Advertisement src="../static/pics2.jpg"/>
     </Aside>
   </Body>
-  </>);
+  </>
+  );
 }
 
 export default setting;

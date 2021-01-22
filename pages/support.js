@@ -12,8 +12,8 @@ import 'firebase/storage';
 import 'firebase/app';
 
 
-export default () => (
-  <Layout>
+export default () => (<>
+  <Layout/>
   <Body> 
     <Headers>
       <Header/>
@@ -63,8 +63,7 @@ export default () => (
       </History__wrapper>
     </Main>
   </Body>
-  </Layout>
-)
+</>)
 
 
 const Body = styled.body`

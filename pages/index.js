@@ -22,11 +22,18 @@ const firestore =  firebase.firestore();
 const storage = firebase.storage();
 
 const Index = () => {
-  const [Fanded, setFanding] = useState([]);
+  const [Fanded, setFanded] = useState([]);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        Router.push('/')
+      } 
+    })
+  }, [auth.currentUser]);
   useEffect(() => {
     const fetchFands = async () => {
       const usersCollection = await firestore.collectionGroup('Fanding').get();
-      setFanding(
+      setFanded(
         usersCollection.docs.map((doc) => {
             return doc.data();
       })
@@ -59,8 +66,9 @@ const Index = () => {
       <SingleLineGridList/>
       <Boxes>
         {Fanded.map((fand) => {
+          console.log(Fanded);
           return(
-              <Link href="/pages/[id]" as={`./pages/${fand.titleID}`}>
+              <Link as={`/posts/${fand.titleID}`}　href="/posts/[Content]" key={fand.titleID}>
               <Box>
                 <Box__thumbnail src={fand.image}/>
                 <Box__separate>

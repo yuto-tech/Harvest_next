@@ -1,4 +1,5 @@
-import React from 'react';
+import {React,useEffect} from 'react';
+import { useRouter } from 'next/router';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,8 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/router';
-import  SignGoogle  from '../Components/Authentication';
+import SignGoogle from '../Components/Authentication';
 import firebaseClient from '../firebaseClient';
 import firebase from "firebase/app"
 import "firebase/firestore";
@@ -41,8 +41,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = () => {
   firebaseClient();
+  const auth = firebase.auth();
   const router = useRouter();
   const classes = useStyles();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -67,7 +68,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          ログイン
         </Typography>
         <form 
         className={classes.form} 
@@ -75,7 +76,7 @@ export default function SignIn() {
         >
         <TextField
                 variant="outlined"
-                label="Email Address"
+                label="メールアドレス"
                 name="email"
                 id="email"
                 autoComplete="email"
@@ -87,7 +88,7 @@ export default function SignIn() {
         <TextField
                 variant="outlined"
                 name="password"
-                label="Password"
+                label="パスワード"
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -96,11 +97,9 @@ export default function SignIn() {
                 fullWidth
               />
               {errors.exampleRequired && <span>This field is required</span>}
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-              <SignGoogle/>
+              <SignGoogle
+              control={<Checkbox value="remember" color="primary" />}
+              />
           <Button
             type="submit"
             fullWidth
@@ -108,17 +107,17 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            ログイン
           </Button>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                パスワードを忘れましたか?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="./signUp" variant="body2">
+                {"新規会員登録はこちら"}
               </Link>
             </Grid>
           </Grid>
@@ -127,3 +126,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default SignIn;
