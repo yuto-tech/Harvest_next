@@ -1,41 +1,41 @@
-import React,{ useState, useEffect} from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import SignGoogle from '../Components/Authentication';
+import React, { useState, useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import SignGoogle from "../Components/Authentication";
 import { useForm } from "react-hook-form";
-import { useRouter } from 'next/router';
-import firebaseClient from '../firebaseClient';
-import firebase from "firebase/app"
+import { useRouter } from "next/router";
+import firebaseClient from "../firebaseClient";
+import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-import 'firebase/storage';
-import 'firebase/app';
+import "firebase/storage";
+import "firebase/app";
 
 firebaseClient();
 const auth = firebase.auth();
-const firestore =  firebase.firestore();
+const firestore = firebase.firestore();
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -47,30 +47,32 @@ const SignUp = () => {
   firebaseClient();
   const router = useRouter();
   const classes = useStyles();
-  const Users = firestore.collection('UserList');
-  const [Name, setName] = useState('');
-  const [LastName, setLastName] = useState('');
+  const Users = firestore.collection("UserList");
+  const [Name, setName] = useState("");
+  const [LastName, setLastName] = useState("");
   const { register, handleSubmit, watch, errors } = useForm();
 
   const onSubmit = (data) => {
-  firebase.auth().createUserWithEmailAndPassword(data.email,data.password)
-    .then(() => {
-      const {uid} = auth.currentUser;
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(data.email, data.password)
+      .then(() => {
+        const { uid } = auth.currentUser;
         Users.doc(uid).set({
-        Name:Name,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-        uid
+          Name: Name,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          uid,
+        });
+        //replaceはページ遷移後にブラウザの戻るを押しても、1つ前のページに戻れない
+        //pushは戻れる。基本はpushでよさそう。
+        router.replace("/");
       })
-      //replaceはページ遷移後にブラウザの戻るを押しても、1つ前のページに戻れない
-      //pushは戻れる。基本はpushでよさそう。
-      router.replace('/');
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log('fail...',errorCode,errorMessage);
-    });
-  }
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("fail...", errorCode, errorMessage);
+      });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -80,14 +82,11 @@ const SignUp = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-        新規会員登録
+          新規会員登録
         </Typography>
-        <form 
-        className={classes.form} 
-        onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-          <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
                 autoComplete="fname"
                 name="Name"
@@ -95,7 +94,7 @@ const SignUp = () => {
                 id="Name"
                 label="名前"
                 value={Name}
-                onChange={(e )=> setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 inputRef={register({ required: true })}
                 required
                 fullWidth
@@ -129,14 +128,14 @@ const SignUp = () => {
               />
               {errors.exampleRequired && <span>This field is required</span>}
             </Grid>
-              <SignGoogle/>
+            <SignGoogle />
           </Grid>
           <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
           >
             ログイン
           </Button>
@@ -152,6 +151,6 @@ const SignUp = () => {
       </div>
     </Container>
   );
-}
+};
 
 export default SignUp;

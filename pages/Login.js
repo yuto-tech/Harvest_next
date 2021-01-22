@@ -1,6 +1,6 @@
-import React,{useContext} from 'react';
-import styled from 'styled-components';
-import Form,{MainForm} from '../Components/Form';
+import React, { useContext } from "react";
+import styled from "styled-components";
+import Form, { MainForm } from "../Components/Form";
 
 const Login = () => {
   const {
@@ -16,54 +16,52 @@ const Login = () => {
     passwordError,
   } = useContext(MainForm);
 
-  return(
+  return (
     <Form>
       <LoginContainer>
         <label>名前</label>
         <input
-        type="text"
-        required
-        defaultValue={email}
-        onClick={(e)=>setEmail(e.target.defaultValue)}
+          type="text"
+          required
+          defaultValue={email}
+          onClick={(e) => setEmail(e.target.defaultValue)}
         />
         <ErrorMsg>{emailError}</ErrorMsg>
         <label>パスワード</label>
         <input
-                type="text"
-                required
-                defaultValue={password}
-                onClick={(e)=>setPassword(e.target.defaultValue)}
+          type="text"
+          required
+          defaultValue={password}
+          onClick={(e) => setPassword(e.target.defaultValue)}
         />
         <ErrorMsg>{passwordError}</ErrorMsg>
         <BtnContainer>
-          {hasAccount? (
+          {hasAccount ? (
             <>
-            <Button onClick={handlelogin}>ログイン</Button>
+              <Button onClick={handlelogin}>ログイン</Button>
               <p>
-              アカウントを持ってませんか?
-              <span onClick={sethasAccount}>新規会員登録</span>
+                アカウントを持ってませんか?
+                <span onClick={sethasAccount}>新規会員登録</span>
               </p>
             </>
-          ):(
+          ) : (
             <>
-            <Button onClick={handleSignup}>新規会員登録</Button>
-            <p>
-              アカウントを持っていますか？
-              <span onClick={sethasAccount}>ログイン</span>
+              <Button onClick={handleSignup}>新規会員登録</Button>
+              <p>
+                アカウントを持っていますか？
+                <span onClick={sethasAccount}>ログイン</span>
               </p>
             </>
-          )
-          }
+          )}
         </BtnContainer>
       </LoginContainer>
     </Form>
   );
 };
 
-export default Login ;
+export default Login;
 
-
- const Button = styled.button`
+const Button = styled.button`
   border: none;
   outline: none;
   width: 100%;
@@ -73,7 +71,7 @@ export default Login ;
   letter-spacing: 1px;
   background: #603bbb;
   cursor: pointer;
-`
+`;
 
 const Logins = styled.div`
   width: 100%;
@@ -81,7 +79,7 @@ const Logins = styled.div`
   padding: 0 20px;
   background: #e9e9e9;
   display: flex;
-`
+`;
 
 const LoginContainer = styled.div`
   padding: 60px;
@@ -99,14 +97,14 @@ const LoginContainer = styled.div`
     rgba(17, 27, 75, 0.9) 100%
   );
   box-shadow: 0 50px 70px -20px rgba(0, 0, 0, 0.8);
-    label{
+  label {
     color: white;
     margin: 14px 0;
     display: block;
     font-size: 22px;
     line-height: 1;
-    }
-    input{
+  }
+  input {
     width: 100%;
     border: none;
     outline: none;
@@ -115,35 +113,34 @@ const LoginContainer = styled.div`
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     letter-spacing: 1px;
-    }
-`
+  }
+`;
 
-const BtnContainer = styled.div `
+const BtnContainer = styled.div`
   width: 100%;
   padding: 24px 0;
-    p{
+  p {
     margin: 14px 0 0 0;
     text-align: right;
     color: #fff;
-      &:hover{
-        color: red;
-      }
+    &:hover {
+      color: red;
     }
-    span{
+  }
+  span {
     color: yellow;
     font-weight: 500;
     letter-spacing: 0.5px;
     margin-left: 5px;
     cursor: pointer;
     transition: all 400ms ease-in-out;
-      &:hover{
-        color: red;
-      }
+    &:hover {
+      color: red;
     }
-`
+  }
+`;
 
 const ErrorMsg = styled.p`
   color: red;
   font-size: 16px;
-`
-
+`;

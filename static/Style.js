@@ -1,7 +1,8 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
 
 //styled-jsx ライブラリ CSS-in-JS
-export default <style>{`
+export default (
+  <style>{`
   li{
   list-style: none;
   }
@@ -22,5 +23,5 @@ export default <style>{`
     padding-top:50px;
   }
 
-`}</style>;
-
+`}</style>
+);
