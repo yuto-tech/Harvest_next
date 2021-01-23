@@ -4,7 +4,6 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import styled from "styled-components";
 
 const Header = () => {
-  //BEMで記述
   return (
     <Headers>
       <Link href="/">
@@ -14,7 +13,7 @@ const Header = () => {
         <Link href="/">
           <Header__button__select>応援する</Header__button__select>
         </Link>
-        <Link href="./support">
+        <Link href="#">
           <Header__button__noselect>支援中</Header__button__noselect>
         </Link>
         <Link href="./setting">

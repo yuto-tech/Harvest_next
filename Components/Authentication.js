@@ -30,6 +30,13 @@ const SignGoogle = () => {
         router.replace("/");
       });
   };
-  return <button onClick={signInWithGoogle}>Googleアカウント</button>;
+  return (
+    <button
+      onClick={signInWithGoogle}
+      style={{ padding: "0", border: "none", background: "transparent" }}
+    >
+      <img src="../static/btn_google_signin_light_normal_web.png" alt="送信" />
+    </button>
+  );
 };
 export default SignGoogle;

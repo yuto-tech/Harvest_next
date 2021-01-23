@@ -31,6 +31,7 @@ export async function getServerSideProps({ params }) {
 
 const Content = ({ params }) => {
   const [FandContent, setFandContent] = useState("");
+  const [Count, setCount] = useState("");
   useEffect(() => {
     const fetchFands = async () => {
       await firestore
@@ -48,6 +49,16 @@ const Content = ({ params }) => {
     };
     fetchFands();
   }, []);
+
+  //カウント機能
+  const onSubmit = () => {
+    firestore
+      .collection("Fanding")
+      .doc(params.Content)
+      .update({
+        NowView: FandContent.NowView + 1,
+      });
+  };
 
   return (
     <>
@@ -126,7 +137,9 @@ const Content = ({ params }) => {
             </Message__text>
           </Message>
           <Button>
-            <Button__desition placeholder="支援する" />
+            <form onSubmit={onSubmit}>
+              <Button__desition type="submit" placeholder="支援する" />
+            </form>
           </Button>
         </Main>
         <Aside>

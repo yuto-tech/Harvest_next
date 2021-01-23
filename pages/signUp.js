@@ -9,9 +9,11 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { v4 as uuidv4 } from "uuid";
 import SignGoogle from "../Components/Authentication";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 import firebaseClient from "../firebaseClient";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -62,6 +64,7 @@ const SignUp = () => {
           Name: Name,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           uid,
+          photoURL: fileUrl,
         });
         //replaceはページ遷移後にブラウザの戻るを押しても、1つ前のページに戻れない
         //pushは戻れる。基本はpushでよさそう。
@@ -72,6 +75,34 @@ const SignUp = () => {
         const errorMessage = error.message;
         console.log("fail...", errorCode, errorMessage);
       });
+  };
+
+  const [selectedFile, setSelectedFile] = useState("");
+  const [preview, setPreview] = useState("");
+  const [fileUrl, setFileUrl] = React.useState(null);
+  const [image, setimage] = useState("");
+  const fileId = uuidv4();
+  //ここがうまく動かない
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+  const onSelectFile = async (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+    setSelectedFile(e.target.files[0]);
+    const file = e.target.files[0];
+    const storageRef = firebase.storage().ref();
+    const fileRef = storageRef.child(`${fileId}.jpeg`);
+    await fileRef.put(file);
+    setFileUrl(await fileRef.getDownloadURL());
   };
 
   return (
@@ -128,7 +159,38 @@ const SignUp = () => {
               />
               {errors.exampleRequired && <span>This field is required</span>}
             </Grid>
-            <SignGoogle />
+            <Grid item xs={12}>
+              {selectedFile && (
+                <img
+                  src={preview}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "50%",
+                  }}
+                />
+              )}
+              <Setting__file>
+                <label htmlFor="image">
+                  <P>アイコンを設定*</P>
+                  <Filesend
+                    type="file"
+                    id="image"
+                    name="image"
+                    onChange={((e) => setimage(e.target.value), onSelectFile)}
+                    inputRef={register({ required: true })}
+                    required
+                  />
+                </label>
+              </Setting__file>
+            </Grid>
+            <Grid item xs={12}>
+              <SignGoogle
+                style={{
+                  paddingBottom: "10px",
+                }}
+              />
+            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -154,3 +216,37 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+const Setting__file = styled.div`
+  z-index: 1;
+  position: relative
+  height: 50px;
+  width: 160px;
+`;
+const Setting__file__images = styled.span`
+  font-size: 16px;
+  color: whitesmoke;
+  height: 50px;
+  margin: auto;
+  opacity: 1;
+  line-height: 570px;
+`;
+const Filesend = styled.input`
+  display: none;
+  position: relative;
+`;
+
+const P = styled.span`
+  display: block;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: “游ゴシック”, “Yu Gothic”;
+  background: #ee7800;
+  padding: 8px 0;
+  border-radius: 10px;
+  max-width: 240px;
+  text-align: center;
+  transition: 0.3s;
+  cursor: pointer;
+`;

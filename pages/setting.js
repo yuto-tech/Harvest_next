@@ -36,20 +36,24 @@ const setting = () => {
   const [explanation, setexplanation] = useState("");
   const [Userlist, setUserlist] = useState("");
   const [UUID, setUUID] = useState(uuidv4());
-  useEffect(() => {
-    !auth.currentUser && router.push("/signIn");
+  useEffect(async () => {
+    if (!auth.currentUser) {
+      router.push("/signIn");
+    } else {
+      const { uid } = auth.currentUser;
+      await firestore
+        .collection("UserList")
+        .doc(uid)
+        .get()
+        .then((doc) => {
+          setUserlist(doc.data());
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
   }, [auth.currentUser]);
-  const { uid } = auth.currentUser;
-  firestore
-    .collection("UserList")
-    .doc(uid)
-    .get()
-    .then((doc) => {
-      setUserlist(doc.data());
-    })
-    .catch((error) => {
-      console.log("Error getting document:", error);
-    });
+
   const fanding = firestore.collection("Fanding").doc(UUID);
   const onSubmit = () => {
     fanding
@@ -62,6 +66,7 @@ const setting = () => {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: Userlist.Name,
         titleID: UUID,
+        NowView: 0,
       })
       .then(() => {
         router.replace("/");
@@ -106,7 +111,7 @@ const setting = () => {
             <Link href="/">
               <Header__button__noselect>応援する</Header__button__noselect>
             </Link>
-            <Link href="./support">
+            <Link href="#">
               <Header__button__noselect>支援中</Header__button__noselect>
             </Link>
             <Link href="./setting">
